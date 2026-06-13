@@ -1,6 +1,53 @@
-/* かきじゅんマスター - Style Sheet */
+/* ============================================================
+   かきじゅんマスター — Design System
+   紙のワークブックを思わせる温かい背景に、白いカードと
+   カテゴリ色相のアクセント。押し込み式の立体ボタンで統一。
+   ============================================================ */
 
-/* ==================== Reset & Base ==================== */
+/* ---------- Design Tokens ---------- */
+:root {
+    /* 地と図 */
+    --paper: #FBF7F0;
+    --card: #FFFFFF;
+    --ink: #3F3A55;
+    --ink-soft: #756E93;
+    --ink-mute: #A8A1BF;
+    --line: #F1ECF6;
+    --line-strong: #E5DFEF;
+    --edge: #E9E3F1;          /* 白ボタンの底エッジ */
+
+    /* ブランド */
+    --primary: #FF6B9D;
+    --primary-deep: #E04E80;
+    --primary-tint: #FFEDF4;
+    --primary-line: #FFD3E2;
+
+    /* セマンティック */
+    --gold: #FFC53D;
+    --gold-deep: #EFA51E;
+    --gold-tint: #FFF7E0;
+    --gold-line: #FFE08A;
+
+    /* 影 */
+    --shadow-card: 0 6px 20px rgba(63, 58, 85, 0.07), 0 2px 6px rgba(63, 58, 85, 0.05);
+    --shadow-float: 0 14px 40px rgba(63, 58, 85, 0.16);
+
+    /* 形・動き */
+    --radius-card: 24px;
+    --radius-pill: 999px;
+    --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-out: cubic-bezier(0.22, 0.8, 0.36, 1);
+
+    --font: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
+}
+
+/* カテゴリ色相 — data-cat を持つ要素とその子に届く */
+[data-cat="hiragana"] { --cat: #FF6B9D; --cat-deep: #E04E80; --cat-tint: #FFEDF4; --cat-line: #FFD3E2; }
+[data-cat="katakana"] { --cat: #41AEEF; --cat-deep: #2E93D4; --cat-tint: #E9F5FE; --cat-line: #C8E7FB; }
+[data-cat="kanji1"]   { --cat: #4FBF8B; --cat-deep: #3BA374; --cat-tint: #EAF8F1; --cat-line: #C9EBDA; }
+[data-cat="kanji2"]   { --cat: #FFA13C; --cat-deep: #E5882A; --cat-tint: #FFF3E3; --cat-line: #FFDFB4; }
+
+/* ---------- Reset & Base ---------- */
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
@@ -17,391 +64,475 @@ html {
 }
 
 body {
-    font-family: 'Segoe UI', 'Hiragino Maru Gothic ProN', 'Yu Gothic UI', メイリオ, sans-serif;
-    background: linear-gradient(160deg, #87CEEB, #FFE4B5, #FFF0F5);
-    background-size: 200% 200%;
-    animation: gradient-shift 12s infinite alternate;
+    font-family: var(--font);
+    color: var(--ink);
+    background-color: var(--paper);
+    /* 角の淡い色のにじみ + クラフト紙のドット */
+    background-image:
+        radial-gradient(circle at 10% -6%, rgba(255, 107, 157, 0.06), transparent 34%),
+        radial-gradient(circle at 92% -4%, rgba(65, 174, 239, 0.06), transparent 30%),
+        radial-gradient(rgba(63, 58, 85, 0.04) 1px, transparent 1.4px);
+    background-size: 100% 100%, 100% 100%, 22px 22px;
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
     overflow-x: hidden;
-    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
 }
 
-@keyframes gradient-shift {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 100% 50%; }
+button {
+    font-family: inherit;
+    cursor: pointer;
+    user-select: none;
+    border: none;
+    color: inherit;
 }
 
-/* ==================== Screen Management ==================== */
+button:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--primary) 40%, transparent);
+    outline-offset: 2px;
+}
+
+::selection {
+    background: var(--primary-tint);
+}
+
+/* ---------- Screen Management ---------- */
 .screen {
     display: none;
     flex-direction: column;
     align-items: center;
     width: 100%;
     max-width: 520px;
-    padding: 0 16px 32px 16px;
-    animation: fadeIn 0.25s ease-in;
+    padding: 0 18px 40px;
+    animation: screen-in 0.28s var(--ease-out);
 }
 
 .screen.active {
     display: flex;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+@keyframes screen-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 .hidden {
     display: none !important;
 }
 
-/* ==================== Home Screen ==================== */
+/* ============================================================
+   ホーム
+   ============================================================ */
 #screen-home {
-    padding-top: 20px;
+    padding-top: 48px;
+}
+
+.home-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.hero-badge {
+    width: 76px;
+    height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    background: var(--card);
+    border-radius: 26px;
+    box-shadow: var(--shadow-card);
+    margin-bottom: 18px;
+    animation: hero-float 3.2s ease-in-out infinite;
+}
+
+@keyframes hero-float {
+    0%, 100% { transform: translateY(0) rotate(-3deg); }
+    50%      { transform: translateY(-7px) rotate(3deg); }
 }
 
 .app-title {
-    color: #FF6B9D;
-    font-size: 2rem;
+    margin: 0 0 10px;
+    font-size: clamp(1.7rem, 6vw, 2.1rem);
     font-weight: 900;
-    text-shadow: 3px 3px 0 rgba(255, 215, 0, 0.5);
-    margin: 0 0 8px 0;
+    letter-spacing: 0.03em;
     text-align: center;
 }
 
-.app-title .mascot {
-    display: inline-block;
-    margin-left: 12px;
-    font-size: 2.2rem;
-    animation: mascot-bounce 0.8s ease-in-out infinite;
-}
-
-@keyframes mascot-bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-12px); }
+/* 蛍光ペン風の下線 */
+.title-mark {
+    background: linear-gradient(transparent 64%, var(--primary-tint) 64%, var(--primary-tint) 92%, transparent 92%);
+    padding: 0 6px;
 }
 
 .app-subtitle {
-    font-size: 0.95rem;
-    color: #666;
+    margin: 0;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--ink-soft);
     text-align: center;
-    margin: 0 0 28px 0;
-    line-height: 1.4;
+    line-height: 1.7;
 }
 
-/* Category Buttons */
+/* --- カテゴリカード --- */
 .cat-buttons {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 14px;
     width: 100%;
-    max-width: 400px;
-    margin-bottom: 24px;
+    max-width: 420px;
+    margin-bottom: 36px;
 }
 
 .cat-btn {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     width: 100%;
-    min-height: 84px;
-    padding: 12px 16px;
-    border: none;
-    border-radius: 20px;
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: white;
-    cursor: pointer;
-    user-select: none;
-    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.15);
-    transition: all 0.15s ease;
+    padding: 16px;
+    background: var(--card);
+    border: 2px solid var(--line);
+    border-radius: var(--radius-card);
+    box-shadow: 0 4px 0 var(--edge), var(--shadow-card);
+    text-align: left;
+    transition: transform 0.14s var(--ease-out), box-shadow 0.14s var(--ease-out), border-color 0.14s;
+}
+
+@media (hover: hover) {
+    .cat-btn:hover {
+        border-color: var(--cat-line);
+        transform: translateY(-1px);
+    }
 }
 
 .cat-btn:active {
     transform: translateY(3px);
-    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
-}
-
-#btn-cat-hiragana {
-    background: linear-gradient(135deg, #FF6B9D, #ff4f8b);
-}
-
-#btn-cat-katakana {
-    background: linear-gradient(135deg, #5AC8FA, #2da8e8);
-}
-
-#btn-cat-kanji1 {
-    background: linear-gradient(135deg, #7CCD7C, #5cb85c);
-}
-
-#btn-cat-kanji2 {
-    background: linear-gradient(135deg, #FFB84D, #ff9800);
+    box-shadow: 0 1px 0 var(--edge), 0 2px 8px rgba(63, 58, 85, 0.06);
 }
 
 .cat-sample {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
-    background: white;
-    border-radius: 50%;
-    font-size: 26px;
-    font-weight: bold;
+    width: 58px;
+    height: 58px;
     flex-shrink: 0;
+    background: var(--cat-tint);
+    color: var(--cat-deep);
+    border-radius: 18px;
+    font-size: 30px;
+    font-weight: 900;
 }
 
-#btn-cat-hiragana .cat-sample { color: #FF6B9D; }
-#btn-cat-katakana .cat-sample { color: #5AC8FA; }
-#btn-cat-kanji1 .cat-sample { color: #7CCD7C; }
-#btn-cat-kanji2 .cat-sample { color: #FFB84D; }
+.cat-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+}
 
 .cat-name {
-    flex: 1;
-    text-align: left;
+    font-size: 1.08rem;
+    font-weight: 900;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+}
+
+.cat-bar {
+    display: block;
+    width: 100%;
+    height: 7px;
+    background: var(--line);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+}
+
+.cat-bar-fill {
+    display: block;
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--cat), var(--cat-deep));
+    border-radius: var(--radius-pill);
+    transition: width 0.6s var(--ease-out);
 }
 
 .cat-progress {
-    background: rgba(255, 255, 255, 0.3);
-    padding: 4px 12px;
-    border-radius: 999px;
-    font-size: 0.85rem;
-    white-space: nowrap;
     flex-shrink: 0;
+    font-size: 0.82rem;
+    font-weight: 900;
+    color: var(--cat-deep);
+    background: var(--cat-tint);
+    padding: 5px 11px;
+    border-radius: var(--radius-pill);
+    font-variant-numeric: tabular-nums;
 }
 
-/* ==================== Sound Button ==================== */
-#btn-sound {
+.cat-chevron {
+    flex-shrink: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--ink-mute);
+    margin-right: 2px;
+    line-height: 1;
+}
+
+/* --- サウンドボタン --- */
+.sound-btn {
     position: fixed;
-    top: 10px;
-    right: 10px;
-    width: 46px;
-    height: 46px;
+    top: 14px;
+    right: 14px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
-    background: white;
-    border: none;
-    font-size: 22px;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: var(--card);
+    border: 2px solid var(--line);
+    font-size: 21px;
+    box-shadow: var(--shadow-card);
     z-index: 50;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.15s ease;
+    transition: transform 0.14s var(--ease-out);
 }
 
-#btn-sound:active {
-    transform: scale(0.95);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+@media (hover: hover) {
+    .sound-btn:hover { transform: scale(1.06); }
 }
 
-/* ==================== Footer ==================== */
+.sound-btn:active {
+    transform: scale(0.93);
+}
+
+/* --- クレジット --- */
 .credit {
-    font-size: 0.72rem;
-    color: #888;
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: var(--ink-mute);
     text-align: center;
-    margin-top: auto;
-    line-height: 1.4;
+    line-height: 1.6;
     word-break: break-word;
 }
 
 .credit a {
-    color: #888;
+    color: var(--ink-soft);
     text-decoration: underline;
+    text-underline-offset: 2px;
 }
 
-/* ==================== Character List Screen ==================== */
+/* ============================================================
+   ヘッダーバー (一覧・練習 共通)
+   ============================================================ */
 header.bar {
     width: 100%;
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 20px;
-    padding: 12px 0;
+    gap: 10px;
+    padding: 16px 0 18px;
+}
+
+.back-btn {
+    padding: 10px 16px;
+    background: var(--card);
+    border: 2px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    color: var(--ink-soft);
+    font-weight: 900;
+    font-size: 0.88rem;
+    box-shadow: 0 3px 0 var(--edge);
+    transition: transform 0.14s var(--ease-out), box-shadow 0.14s;
+    flex-shrink: 0;
+}
+
+.back-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 var(--edge);
 }
 
 #list-title {
     flex: 1;
     text-align: center;
     margin: 0;
-    font-size: 1.3rem;
-    color: #333;
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: var(--ink);
 }
 
-.back-btn {
-    padding: 8px 16px;
-    background: white;
-    border: 2px solid #FF6B9D;
-    border-radius: 18px;
-    color: #FF6B9D;
-    font-weight: bold;
-    font-size: 0.9rem;
-    cursor: pointer;
-    user-select: none;
-    box-shadow: 0 4px 0 rgba(255, 107, 157, 0.3);
-    transition: all 0.15s ease;
+/* 戻るボタンと左右対称にしてタイトルを中央へ */
+.bar-spacer {
+    width: 96px;
+    flex-shrink: 0;
 }
 
-.back-btn:active {
-    transform: translateY(2px);
-    box-shadow: 0 2px 0 rgba(255, 107, 157, 0.3);
-}
-
+/* ============================================================
+   もじいちらん
+   ============================================================ */
 #char-grid {
     display: grid;
-    gap: 8px;
+    gap: 10px;
     width: 100%;
     margin-bottom: 20px;
 }
 
 #char-grid.kana {
     grid-template-columns: repeat(5, 1fr);
-    max-width: 380px;
+    max-width: 400px;
 }
 
 #char-grid.kanji {
     grid-template-columns: repeat(8, 1fr);
 }
 
-@media (max-width: 480px) {
-    #char-grid.kanji {
-        grid-template-columns: repeat(6, 1fr);
-    }
-}
-
 .char-btn {
     aspect-ratio: 1;
-    background: white;
-    border: 3px solid;
-    border-radius: 14px;
-    font-size: clamp(20px, 5vw, 30px);
-    font-weight: bold;
-    color: #444;
-    cursor: pointer;
-    user-select: none;
+    background: var(--card);
+    border: 2px solid var(--cat-line);
+    border-radius: 16px;
+    font-size: clamp(19px, 4.6vw, 27px);
+    font-weight: 700;
+    color: var(--ink);
     position: relative;
-    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
-    transition: all 0.15s ease;
+    box-shadow: 0 3px 0 var(--edge);
+    transition: transform 0.12s var(--ease-out), box-shadow 0.12s, background 0.12s;
+    padding: 0;
+}
+
+@media (hover: hover) {
+    .char-btn:hover {
+        background: var(--cat-tint);
+    }
 }
 
 .char-btn:active {
     transform: translateY(2px);
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
-}
-
-#char-grid[data-cat="hiragana"] .char-btn {
-    border-color: #FF6B9D;
-}
-
-#char-grid[data-cat="katakana"] .char-btn {
-    border-color: #5AC8FA;
-}
-
-#char-grid[data-cat="kanji1"] .char-btn {
-    border-color: #7CCD7C;
-}
-
-#char-grid[data-cat="kanji2"] .char-btn {
-    border-color: #FFB84D;
+    box-shadow: 0 1px 0 var(--edge);
 }
 
 .char-btn.done {
-    background: #FFF8DC;
-    border-color: #FFD700;
+    background: var(--gold-tint);
+    border-color: var(--gold-line);
 }
 
 .char-btn.done::after {
     content: "⭐";
     position: absolute;
     top: -7px;
-    right: -5px;
-    font-size: 13px;
+    right: -7px;
+    font-size: 12px;
+    background: var(--card);
+    border: 1.5px solid var(--gold-line);
+    border-radius: 50%;
+    width: 21px;
+    height: 21px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(63, 58, 85, 0.12);
 }
 
-/* ==================== Practice Screen ==================== */
+/* ============================================================
+   れんしゅう
+   ============================================================ */
+.practice-bar {
+    margin-bottom: 4px;
+}
+
 .nav-btn {
-    width: 44px;
-    height: 44px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
-    background: white;
-    border: none;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #FF6B9D;
-    cursor: pointer;
-    user-select: none;
-    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
-    transition: all 0.15s ease;
+    background: var(--card);
+    border: 2px solid var(--line-strong);
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--primary);
+    box-shadow: 0 3px 0 var(--edge);
+    transition: transform 0.14s var(--ease-out), box-shadow 0.14s;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 3px; /* ‹ › の光学中央合わせ */
 }
 
 .nav-btn:active {
     transform: translateY(2px);
-    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 0 var(--edge);
 }
 
 .char-info {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
     flex: 1;
+    min-width: 0;
 }
 
 #practice-char-label {
-    font-size: 1.6rem;
-    font-weight: bold;
-    color: #333;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--ink);
+    line-height: 1.2;
 }
 
 #practice-stroke-count {
-    font-size: 0.8rem;
-    color: #999;
-    background: rgba(200, 200, 200, 0.2);
-    padding: 2px 8px;
-    border-radius: 12px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--ink-soft);
+    background: var(--card);
+    border: 1.5px solid var(--line);
+    padding: 2px 10px;
+    border-radius: var(--radius-pill);
+    white-space: nowrap;
 }
 
-/* Mode Tabs */
+/* --- モード切替 --- */
 .mode-tabs {
     display: flex;
     gap: 4px;
-    background: white;
-    padding: 4px;
-    border-radius: 999px;
-    margin-bottom: 20px;
+    background: var(--card);
+    border: 2px solid var(--line);
+    padding: 5px;
+    border-radius: var(--radius-pill);
+    margin: 14px 0 18px;
+    box-shadow: var(--shadow-card);
 }
 
 .mode-tab {
-    padding: 10px 22px;
+    padding: 10px 26px;
     background: transparent;
-    border: none;
-    border-radius: 999px;
-    font-size: 1.05rem;
-    font-weight: bold;
-    color: #888;
-    cursor: pointer;
-    user-select: none;
-    transition: all 0.2s ease;
+    border-radius: var(--radius-pill);
+    font-size: 1rem;
+    font-weight: 900;
+    color: var(--ink-mute);
+    transition: background 0.18s, color 0.18s, transform 0.14s var(--ease-out);
 }
 
 .mode-tab.active {
-    background: #FF6B9D;
-    color: white;
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(224, 78, 128, 0.35);
 }
 
-/* Stage Card */
+.mode-tab:not(.active):active {
+    transform: scale(0.96);
+}
+
+/* --- お手本ステージ --- */
 .stage-card {
     width: min(88vw, 420px);
     aspect-ratio: 1;
-    background: white;
-    border-radius: 24px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    padding: 8px;
-    margin-bottom: 16px;
+    background: var(--card);
+    border-radius: 28px;
+    border: 2px solid var(--line);
+    box-shadow: var(--shadow-card);
+    padding: 10px;
     position: relative;
 }
 
@@ -411,8 +542,10 @@ header.bar {
 
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-6px); }
-    75% { transform: translateX(6px); }
+    20%      { transform: translateX(-7px); }
+    45%      { transform: translateX(6px); }
+    70%      { transform: translateX(-4px); }
+    90%      { transform: translateX(2px); }
 }
 
 #stage {
@@ -422,122 +555,153 @@ header.bar {
     touch-action: none;
 }
 
-/* Trace Message */
+/* --- なぞりメッセージ --- */
 #trace-msg {
-    min-height: 2.4em;
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #e0529c;
+    min-height: 2.6em;
+    font-size: 1.02rem;
+    font-weight: 900;
+    color: var(--primary-deep);
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     width: 100%;
-    margin-bottom: 16px;
+    margin: 10px 0 12px;
     padding: 0 16px;
-    line-height: 1.4;
+    line-height: 1.45;
+    letter-spacing: 0.02em;
 }
 
-/* Watch & Trace Controls */
+/* --- コントロール --- */
 #watch-controls,
 #trace-controls {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
     align-items: center;
 }
 
 .big-btn {
-    padding: 12px 28px;
-    font-size: 1.15rem;
-    font-weight: bold;
-    color: white;
-    background: linear-gradient(135deg, #FF6B9D, #ff4f8b);
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    user-select: none;
-    box-shadow: 0 6px 0 rgba(255, 107, 157, 0.4);
-    transition: all 0.15s ease;
+    padding: 14px 38px;
+    font-size: 1.1rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    color: #fff;
+    background: var(--primary);
+    border-radius: var(--radius-pill);
+    box-shadow: 0 4px 0 var(--primary-deep), 0 10px 22px rgba(224, 78, 128, 0.28);
+    transition: transform 0.14s var(--ease-out), box-shadow 0.14s;
+}
+
+@media (hover: hover) {
+    .big-btn:hover { filter: brightness(1.04); }
 }
 
 .big-btn:active {
-    transform: translateY(3px);
-    box-shadow: 0 3px 0 rgba(255, 107, 157, 0.4);
+    transform: translateY(4px);
+    box-shadow: 0 0 0 var(--primary-deep), 0 4px 10px rgba(224, 78, 128, 0.2);
 }
 
-.step-row,
-.speed-row {
+/* 白地のゴーストボタン (なぞるモードのやりなおし) */
+.ghost-btn {
+    color: var(--primary-deep);
+    background: var(--card);
+    border: 2px solid var(--primary-line);
+    box-shadow: 0 4px 0 var(--primary-line), 0 8px 18px rgba(63, 58, 85, 0.06);
+}
+
+.ghost-btn:active {
+    box-shadow: 0 0 0 var(--primary-line);
+}
+
+.step-row {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     justify-content: center;
     width: 100%;
-    flex-wrap: wrap;
 }
 
-.step-btn,
+.step-btn {
+    padding: 10px 22px;
+    background: var(--card);
+    border: 2px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    font-size: 0.92rem;
+    font-weight: 900;
+    color: var(--ink-soft);
+    box-shadow: 0 3px 0 var(--edge);
+    transition: transform 0.12s var(--ease-out), box-shadow 0.12s;
+}
+
+.step-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 var(--edge);
+}
+
+/* 速度はセグメントコントロール */
+.speed-row {
+    display: flex;
+    gap: 4px;
+    background: var(--card);
+    border: 2px solid var(--line);
+    padding: 4px;
+    border-radius: var(--radius-pill);
+}
+
 .speed-btn {
     padding: 8px 16px;
-    background: white;
-    border: 2px solid #DDD;
-    border-radius: 16px;
-    font-size: 0.95rem;
-    font-weight: bold;
-    color: #444;
-    cursor: pointer;
-    user-select: none;
-    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
-    transition: all 0.15s ease;
-}
-
-.step-btn:active,
-.speed-btn:active {
-    transform: translateY(2px);
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    background: transparent;
+    border-radius: var(--radius-pill);
+    font-size: 0.85rem;
+    font-weight: 900;
+    color: var(--ink-mute);
+    transition: background 0.16s, color 0.16s;
 }
 
 .speed-btn.active {
-    background: #FFB84D;
-    color: white;
-    border-color: #ff9800;
+    background: var(--gold-tint);
+    color: var(--gold-deep);
 }
 
 .toggle-btn {
-    padding: 8px 20px;
-    background: white;
-    border: 2px solid #DDD;
-    border-radius: 18px;
-    font-size: 0.95rem;
-    font-weight: bold;
-    color: #666;
-    cursor: pointer;
-    user-select: none;
-    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
-    transition: all 0.15s ease;
+    padding: 9px 20px;
+    background: var(--card);
+    border: 2px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    font-size: 0.88rem;
+    font-weight: 900;
+    color: var(--ink-mute);
+    box-shadow: 0 3px 0 var(--edge);
+    transition: all 0.15s var(--ease-out);
 }
 
 .toggle-btn:active {
     transform: translateY(2px);
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 0 var(--edge);
 }
 
 .toggle-btn.active {
-    background: #5AC8FA;
-    color: white;
-    border-color: #2da8e8;
+    background: #E9F5FE;
+    border-color: #C8E7FB;
+    color: #2E93D4;
+    box-shadow: 0 3px 0 #C8E7FB;
 }
 
-/* ==================== Celebration Overlay ==================== */
+/* ============================================================
+   おいわいオーバーレイ
+   ============================================================ */
 #overlay-celebrate {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.45);
+    background: rgba(63, 58, 85, 0.45);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
     z-index: 100;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 24px;
 }
 
 #overlay-celebrate.show {
@@ -545,125 +709,114 @@ header.bar {
 }
 
 .celebrate-box {
-    background: white;
-    border-radius: 28px;
-    padding: 28px 36px;
+    background: var(--card);
+    border-radius: 32px;
+    padding: 34px 40px 30px;
     text-align: center;
-    animation: zoom-rotate-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-    max-width: 320px;
+    animation: celebrate-in 0.5s var(--ease-pop);
+    max-width: 340px;
+    width: 100%;
+    box-shadow: var(--shadow-float);
 }
 
-@keyframes zoom-rotate-in {
-    0% {
-        transform: scale(0.3) rotate(-8deg);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1) rotate(0deg);
-        opacity: 1;
-    }
+@keyframes celebrate-in {
+    0%   { transform: scale(0.4) rotate(-6deg); opacity: 0; }
+    100% { transform: scale(1) rotate(0); opacity: 1; }
 }
 
 .hanamaru {
-    font-size: 84px;
-    margin-bottom: 12px;
-    animation: pulse-glow 1.2s ease-in-out infinite;
+    font-size: 86px;
+    line-height: 1;
+    margin-bottom: 14px;
     display: inline-block;
+    animation: hanamaru-pulse 1.6s ease-in-out infinite;
 }
 
-@keyframes pulse-glow {
-    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(255, 200, 100, 0.5)); }
-    50% { transform: scale(1.1); filter: drop-shadow(0 0 16px rgba(255, 200, 100, 0.8)); }
+@keyframes hanamaru-pulse {
+    0%, 100% { transform: scale(1);    filter: drop-shadow(0 4px 10px rgba(255, 154, 187, 0.45)); }
+    50%      { transform: scale(1.07); filter: drop-shadow(0 6px 18px rgba(255, 154, 187, 0.7)); }
 }
 
 #celebrate-text {
-    font-size: 1.6rem;
-    color: #FF6B9D;
-    margin: 0 0 16px 0;
-    font-weight: bold;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--ink);
+    margin: 0 0 14px;
+    letter-spacing: 0.03em;
 }
 
 #celebrate-stars {
     display: flex;
-    gap: 12px;
+    gap: 14px;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
 .star {
-    font-size: 40px;
-    color: #ddd;
-    transition: all 0.15s ease;
+    font-size: 38px;
+    line-height: 1;
+    color: var(--line-strong);
+}
+
+.star::before {
+    content: "★";
 }
 
 .star.on {
-    color: #FFD700;
-    animation: star-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+    color: var(--gold);
+    text-shadow: 0 3px 10px rgba(255, 197, 61, 0.55);
+    animation: star-pop 0.45s var(--ease-pop) backwards;
 }
 
-.star:nth-child(2).on {
-    animation-delay: 0.1s;
-}
-
-.star:nth-child(3).on {
-    animation-delay: 0.2s;
-}
+.star:nth-child(2).on { animation-delay: 0.12s; }
+.star:nth-child(3).on { animation-delay: 0.24s; }
 
 @keyframes star-pop {
-    0% {
-        transform: scale(0) rotate(-45deg);
-    }
-    100% {
-        transform: scale(1) rotate(0deg);
-    }
+    0%   { transform: scale(0) rotate(-50deg); }
+    100% { transform: scale(1) rotate(0); }
 }
 
 .celebrate-btns {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     justify-content: center;
     flex-wrap: wrap;
 }
 
 #btn-celebrate-again {
-    padding: 10px 20px;
-    background: white;
-    border: 2px solid #FF6B9D;
-    border-radius: 18px;
-    color: #FF6B9D;
-    font-weight: bold;
-    font-size: 0.95rem;
-    cursor: pointer;
-    user-select: none;
-    box-shadow: 0 4px 0 rgba(255, 107, 157, 0.2);
-    transition: all 0.15s ease;
+    padding: 12px 20px;
+    background: var(--card);
+    border: 2px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    color: var(--ink-soft);
+    font-weight: 900;
+    font-size: 0.92rem;
+    box-shadow: 0 3px 0 var(--edge);
+    transition: transform 0.14s var(--ease-out), box-shadow 0.14s;
 }
 
 #btn-celebrate-again:active {
     transform: translateY(2px);
-    box-shadow: 0 2px 0 rgba(255, 107, 157, 0.2);
+    box-shadow: 0 1px 0 var(--edge);
 }
 
 #btn-celebrate-next {
-    padding: 10px 20px;
-    background: linear-gradient(135deg, #FF6B9D, #ff4f8b);
-    color: white;
-    border: none;
-    border-radius: 18px;
-    font-weight: bold;
-    font-size: 0.95rem;
-    cursor: pointer;
-    user-select: none;
-    box-shadow: 0 4px 0 rgba(255, 107, 157, 0.4);
-    transition: all 0.15s ease;
+    padding: 12px 26px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: var(--radius-pill);
+    font-weight: 900;
+    font-size: 0.92rem;
+    box-shadow: 0 3px 0 var(--primary-deep), 0 8px 18px rgba(224, 78, 128, 0.3);
+    transition: transform 0.14s var(--ease-out), box-shadow 0.14s;
 }
 
 #btn-celebrate-next:active {
-    transform: translateY(2px);
-    box-shadow: 0 2px 0 rgba(255, 107, 157, 0.4);
+    transform: translateY(3px);
+    box-shadow: 0 0 0 var(--primary-deep);
 }
 
-/* Confetti */
+/* --- 紙ふぶき --- */
 .confetti-piece {
     position: fixed;
     top: -20px;
@@ -677,6 +830,16 @@ header.bar {
     pointer-events: none;
 }
 
+.confetti-piece:nth-child(3n) {
+    border-radius: 50%;
+    height: 10px;
+}
+
+.confetti-piece:nth-child(4n) {
+    width: 7px;
+    height: 16px;
+}
+
 @keyframes confetti-fall {
     to {
         transform: translateY(110vh) rotate(720deg);
@@ -684,46 +847,64 @@ header.bar {
     }
 }
 
-/* ==================== Responsive Adjustments ==================== */
+/* ============================================================
+   レスポンシブ
+   ============================================================ */
 @media (max-width: 480px) {
-    body {
-        padding: 0;
-    }
-
     .screen {
-        padding: 0 12px 32px 12px;
+        padding: 0 14px 36px;
     }
 
-    .app-title {
-        font-size: 1.6rem;
+    #screen-home {
+        padding-top: 38px;
     }
 
-    .app-subtitle {
-        font-size: 0.85rem;
-    }
-
-    .cat-buttons {
-        max-width: 100%;
+    .hero-badge {
+        width: 66px;
+        height: 66px;
+        font-size: 34px;
+        border-radius: 22px;
     }
 
     .cat-btn {
-        min-height: 72px;
-        font-size: 1.1rem;
+        padding: 13px;
+        gap: 12px;
     }
 
     .cat-sample {
-        width: 40px;
-        height: 40px;
-        font-size: 22px;
+        width: 52px;
+        height: 52px;
+        font-size: 26px;
+        border-radius: 16px;
+    }
+
+    .cat-name {
+        font-size: 1rem;
+    }
+
+    .cat-chevron {
+        display: none;
+    }
+
+    #char-grid.kanji {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    .bar-spacer {
+        width: 86px;
     }
 
     .stage-card {
         width: min(92vw, 100%);
+        padding: 8px;
+    }
+
+    .mode-tab {
+        padding: 9px 20px;
     }
 
     .celebrate-box {
-        padding: 20px 24px;
-        max-width: 280px;
+        padding: 26px 24px 24px;
     }
 
     .hanamaru {
@@ -731,10 +912,34 @@ header.bar {
     }
 
     #celebrate-text {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
     }
 
     .star {
-        font-size: 32px;
+        font-size: 33px;
+    }
+}
+
+/* デスクトップのスクロールバー */
+@media (min-width: 700px) {
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 8px; }
+}
+
+/* ---------- Reduced Motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .hero-badge,
+    .hanamaru,
+    .confetti-piece {
+        animation: none !important;
+    }
+
+    .screen {
+        animation: none;
+    }
+
+    * {
+        transition-duration: 0.01ms !important;
     }
 }

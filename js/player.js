@@ -35,7 +35,7 @@ class StrokePlayer {
     rect.setAttribute('height', '106');
     rect.setAttribute('rx', '10');
     rect.setAttribute('fill', 'none');
-    rect.setAttribute('stroke', '#f0d8e2');
+    rect.setAttribute('stroke', '#EFEAF4');
     rect.setAttribute('stroke-width', '1.5');
     this.layerGuide.appendChild(rect);
 
@@ -45,7 +45,7 @@ class StrokePlayer {
     hLine.setAttribute('y1', '54.5');
     hLine.setAttribute('x2', '109');
     hLine.setAttribute('y2', '54.5');
-    hLine.setAttribute('stroke', '#f0d8e2');
+    hLine.setAttribute('stroke', '#EFEAF4');
     hLine.setAttribute('stroke-width', '1');
     hLine.setAttribute('stroke-dasharray', '4 3');
     this.layerGuide.appendChild(hLine);
@@ -56,7 +56,7 @@ class StrokePlayer {
     vLine.setAttribute('y1', '0');
     vLine.setAttribute('x2', '54.5');
     vLine.setAttribute('y2', '109');
-    vLine.setAttribute('stroke', '#f0d8e2');
+    vLine.setAttribute('stroke', '#EFEAF4');
     vLine.setAttribute('stroke-width', '1');
     vLine.setAttribute('stroke-dasharray', '4 3');
     this.layerGuide.appendChild(vLine);
@@ -80,7 +80,7 @@ class StrokePlayer {
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         path.setAttribute('d', d);
         path.setAttribute('fill', 'none');
-        path.setAttribute('stroke', '#dcdce6');
+        path.setAttribute('stroke', '#E3DFEC');
         path.setAttribute('stroke-width', '5');
         path.setAttribute('stroke-linecap', 'round');
         path.setAttribute('stroke-linejoin', 'round');
@@ -94,9 +94,13 @@ class StrokePlayer {
         const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         text.setAttribute('x', pos[0]);
         text.setAttribute('y', pos[1]);
-        text.setAttribute('font-size', '7');
-        text.setAttribute('font-weight', 'bold');
-        text.setAttribute('fill', '#ff8c00');
+        text.setAttribute('font-size', '6.5');
+        text.setAttribute('font-weight', '900');
+        text.setAttribute('font-family', "'Zen Maru Gothic', sans-serif");
+        text.setAttribute('fill', '#F08C3C');
+        text.setAttribute('stroke', '#FFFFFF');
+        text.setAttribute('stroke-width', '2.4');
+        text.setAttribute('paint-order', 'stroke');
         text.setAttribute('text-anchor', 'middle');
         text.setAttribute('dominant-baseline', 'middle');
         text.textContent = idx + 1;
@@ -147,7 +151,7 @@ class StrokePlayer {
     for (let i = 0; i < count; i++) {
       if (basePaths[i]) {
         const pathClone = basePaths[i].cloneNode(true);
-        pathClone.setAttribute('stroke', '#32324e');
+        pathClone.setAttribute('stroke', '#3F3A55');
         pathClone.setAttribute('stroke-width', '5');
         this.layerDone.appendChild(pathClone);
       }
@@ -164,7 +168,7 @@ class StrokePlayer {
     if (!basePath) return false;
 
     const pathClone = basePath.cloneNode(true);
-    pathClone.setAttribute('stroke', '#ff5a78');
+    pathClone.setAttribute('stroke', '#FF5C8A');
     pathClone.setAttribute('stroke-width', '5.5');
     pathClone.setAttribute('stroke-linecap', 'round');
     pathClone.setAttribute('stroke-linejoin', 'round');
@@ -199,7 +203,7 @@ class StrokePlayer {
           // Move to done layer
           pathClone.remove();
           const donePath = basePath.cloneNode(true);
-          donePath.setAttribute('stroke', '#32324e');
+          donePath.setAttribute('stroke', '#3F3A55');
           donePath.setAttribute('stroke-width', '5');
           this.layerDone.appendChild(donePath);
           resolve(true);

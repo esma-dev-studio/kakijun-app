@@ -220,6 +220,10 @@
         if (progress) {
           progress.textContent = `${doneCount} / ${chars.length}`;
         }
+        const fill = btn.querySelector('.cat-bar-fill');
+        if (fill) {
+          fill.style.width = chars.length ? `${Math.round((doneCount / chars.length) * 100)}%` : '0%';
+        }
       }
     });
   }
@@ -334,6 +338,14 @@
     Sounds.play('wrong');
     const msg = fails >= 2 ? 'おてほんを よく みてね' : 'おしい! もういちど!';
     setMsg(msg);
+    // ステージを小さく振って「ちがうよ」を伝える
+    const card = document.querySelector('.stage-card');
+    if (card) {
+      card.classList.remove('shake');
+      void card.offsetWidth; // アニメーション再始動
+      card.classList.add('shake');
+      card.addEventListener('animationend', () => card.classList.remove('shake'), { once: true });
+    }
   }
 
   function onAllDone(totalFails) {
@@ -351,15 +363,11 @@
     const msg = messages[Math.floor(Math.random() * messages.length)];
     celebrateText.textContent = msg;
 
+    // ★はCSSの::beforeで描画 (未獲得はグレーの★)。クラスだけ切り替える
     const starSpans = celebrateStars.querySelectorAll('.star');
     starSpans.forEach((s, i) => {
-      if (i < stars) {
-        s.textContent = '★';
-        s.classList.add('on');
-      } else {
-        s.textContent = '';
-        s.classList.remove('on');
-      }
+      s.textContent = '';
+      s.classList.toggle('on', i < stars);
     });
 
     confettiBox.innerHTML = '';

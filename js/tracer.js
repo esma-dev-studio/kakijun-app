@@ -72,7 +72,7 @@ class Tracer {
 
     // Ghost preview
     const ghost = basePath.cloneNode(true);
-    ghost.setAttribute('stroke', '#ffc1d0');
+    ghost.setAttribute('stroke', '#FFD3E0');
     ghost.setAttribute('stroke-width', '5');
     ghost.setAttribute('stroke-dasharray', '3.5 3.5');
     ghost.setAttribute('stroke-linecap', 'round');
@@ -85,7 +85,7 @@ class Tracer {
     circle.setAttribute('cx', p0.x);
     circle.setAttribute('cy', p0.y);
     circle.setAttribute('r', '4.5');
-    circle.setAttribute('fill', '#ff3b30');
+    circle.setAttribute('fill', '#FF4D6D');
     const animate = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
     animate.setAttribute('attributeName', 'r');
     animate.setAttribute('values', '3.5;5;3.5');
@@ -108,7 +108,7 @@ class Tracer {
     line.setAttribute('y1', p0.y);
     line.setAttribute('x2', p1.x);
     line.setAttribute('y2', p1.y);
-    line.setAttribute('stroke', '#ff3b30');
+    line.setAttribute('stroke', '#FF4D6D');
     line.setAttribute('stroke-width', '1.6');
     line.setAttribute('stroke-linecap', 'round');
     this.player.markerLayer.appendChild(line);
@@ -124,7 +124,7 @@ class Tracer {
     const baseX2 = ax - arrowSize * Math.cos(rad + Math.PI / 6);
     const baseY2 = ay - arrowSize * Math.sin(rad + Math.PI / 6);
     arrowPath.setAttribute('points', `${ax},${ay} ${baseX1},${baseY1} ${baseX2},${baseY2}`);
-    arrowPath.setAttribute('fill', '#ff3b30');
+    arrowPath.setAttribute('fill', '#FF4D6D');
     this.player.markerLayer.appendChild(arrowPath);
 
     // Precompute sample points (終点は必ず含める — 短い点画の到達判定に必須)
@@ -169,7 +169,7 @@ class Tracer {
     this.inkPolyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
     this.inkPolyline.setAttribute('points', `${svgPt.x},${svgPt.y}`);
     this.inkPolyline.setAttribute('fill', 'none');
-    this.inkPolyline.setAttribute('stroke', '#ffa726');
+    this.inkPolyline.setAttribute('stroke', '#FF9F2E');
     this.inkPolyline.setAttribute('stroke-width', '6');
     this.inkPolyline.setAttribute('stroke-linecap', 'round');
     this.inkPolyline.setAttribute('stroke-linejoin', 'round');
