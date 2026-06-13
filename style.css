@@ -1,0 +1,740 @@
+/* かきじゅんマスター - Style Sheet */
+
+/* ==================== Reset & Base ==================== */
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+html {
+    min-height: 100%;
+}
+
+body {
+    font-family: 'Segoe UI', 'Hiragino Maru Gothic ProN', 'Yu Gothic UI', メイリオ, sans-serif;
+    background: linear-gradient(160deg, #87CEEB, #FFE4B5, #FFF0F5);
+    background-size: 200% 200%;
+    animation: gradient-shift 12s infinite alternate;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+    padding: 0;
+}
+
+@keyframes gradient-shift {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+/* ==================== Screen Management ==================== */
+.screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 520px;
+    padding: 0 16px 32px 16px;
+    animation: fadeIn 0.25s ease-in;
+}
+
+.screen.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ==================== Home Screen ==================== */
+#screen-home {
+    padding-top: 20px;
+}
+
+.app-title {
+    color: #FF6B9D;
+    font-size: 2rem;
+    font-weight: 900;
+    text-shadow: 3px 3px 0 rgba(255, 215, 0, 0.5);
+    margin: 0 0 8px 0;
+    text-align: center;
+}
+
+.app-title .mascot {
+    display: inline-block;
+    margin-left: 12px;
+    font-size: 2.2rem;
+    animation: mascot-bounce 0.8s ease-in-out infinite;
+}
+
+@keyframes mascot-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+.app-subtitle {
+    font-size: 0.95rem;
+    color: #666;
+    text-align: center;
+    margin: 0 0 28px 0;
+    line-height: 1.4;
+}
+
+/* Category Buttons */
+.cat-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 24px;
+}
+
+.cat-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-height: 84px;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 20px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.15);
+    transition: all 0.15s ease;
+}
+
+.cat-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
+}
+
+#btn-cat-hiragana {
+    background: linear-gradient(135deg, #FF6B9D, #ff4f8b);
+}
+
+#btn-cat-katakana {
+    background: linear-gradient(135deg, #5AC8FA, #2da8e8);
+}
+
+#btn-cat-kanji1 {
+    background: linear-gradient(135deg, #7CCD7C, #5cb85c);
+}
+
+#btn-cat-kanji2 {
+    background: linear-gradient(135deg, #FFB84D, #ff9800);
+}
+
+.cat-sample {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: white;
+    border-radius: 50%;
+    font-size: 26px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+#btn-cat-hiragana .cat-sample { color: #FF6B9D; }
+#btn-cat-katakana .cat-sample { color: #5AC8FA; }
+#btn-cat-kanji1 .cat-sample { color: #7CCD7C; }
+#btn-cat-kanji2 .cat-sample { color: #FFB84D; }
+
+.cat-name {
+    flex: 1;
+    text-align: left;
+}
+
+.cat-progress {
+    background: rgba(255, 255, 255, 0.3);
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* ==================== Sound Button ==================== */
+#btn-sound {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: white;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+#btn-sound:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* ==================== Footer ==================== */
+.credit {
+    font-size: 0.72rem;
+    color: #888;
+    text-align: center;
+    margin-top: auto;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.credit a {
+    color: #888;
+    text-decoration: underline;
+}
+
+/* ==================== Character List Screen ==================== */
+header.bar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 12px 0;
+}
+
+#list-title {
+    flex: 1;
+    text-align: center;
+    margin: 0;
+    font-size: 1.3rem;
+    color: #333;
+}
+
+.back-btn {
+    padding: 8px 16px;
+    background: white;
+    border: 2px solid #FF6B9D;
+    border-radius: 18px;
+    color: #FF6B9D;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 4px 0 rgba(255, 107, 157, 0.3);
+    transition: all 0.15s ease;
+}
+
+.back-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 rgba(255, 107, 157, 0.3);
+}
+
+#char-grid {
+    display: grid;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+#char-grid.kana {
+    grid-template-columns: repeat(5, 1fr);
+    max-width: 380px;
+}
+
+#char-grid.kanji {
+    grid-template-columns: repeat(8, 1fr);
+}
+
+@media (max-width: 480px) {
+    #char-grid.kanji {
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+.char-btn {
+    aspect-ratio: 1;
+    background: white;
+    border: 3px solid;
+    border-radius: 14px;
+    font-size: clamp(20px, 5vw, 30px);
+    font-weight: bold;
+    color: #444;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.15s ease;
+}
+
+.char-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+#char-grid[data-cat="hiragana"] .char-btn {
+    border-color: #FF6B9D;
+}
+
+#char-grid[data-cat="katakana"] .char-btn {
+    border-color: #5AC8FA;
+}
+
+#char-grid[data-cat="kanji1"] .char-btn {
+    border-color: #7CCD7C;
+}
+
+#char-grid[data-cat="kanji2"] .char-btn {
+    border-color: #FFB84D;
+}
+
+.char-btn.done {
+    background: #FFF8DC;
+    border-color: #FFD700;
+}
+
+.char-btn.done::after {
+    content: "⭐";
+    position: absolute;
+    top: -7px;
+    right: -5px;
+    font-size: 13px;
+}
+
+/* ==================== Practice Screen ==================== */
+.nav-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: white;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #FF6B9D;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+}
+
+.nav-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.char-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+}
+
+#practice-char-label {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #333;
+}
+
+#practice-stroke-count {
+    font-size: 0.8rem;
+    color: #999;
+    background: rgba(200, 200, 200, 0.2);
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+/* Mode Tabs */
+.mode-tabs {
+    display: flex;
+    gap: 4px;
+    background: white;
+    padding: 4px;
+    border-radius: 999px;
+    margin-bottom: 20px;
+}
+
+.mode-tab {
+    padding: 10px 22px;
+    background: transparent;
+    border: none;
+    border-radius: 999px;
+    font-size: 1.05rem;
+    font-weight: bold;
+    color: #888;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s ease;
+}
+
+.mode-tab.active {
+    background: #FF6B9D;
+    color: white;
+}
+
+/* Stage Card */
+.stage-card {
+    width: min(88vw, 420px);
+    aspect-ratio: 1;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    padding: 8px;
+    margin-bottom: 16px;
+    position: relative;
+}
+
+.stage-card.shake {
+    animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
+
+#stage {
+    width: 100%;
+    height: 100%;
+    display: block;
+    touch-action: none;
+}
+
+/* Trace Message */
+#trace-msg {
+    min-height: 2.4em;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #e0529c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 16px;
+    padding: 0 16px;
+    line-height: 1.4;
+}
+
+/* Watch & Trace Controls */
+#watch-controls,
+#trace-controls {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.big-btn {
+    padding: 12px 28px;
+    font-size: 1.15rem;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #FF6B9D, #ff4f8b);
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 6px 0 rgba(255, 107, 157, 0.4);
+    transition: all 0.15s ease;
+}
+
+.big-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 3px 0 rgba(255, 107, 157, 0.4);
+}
+
+.step-row,
+.speed-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.step-btn,
+.speed-btn {
+    padding: 8px 16px;
+    background: white;
+    border: 2px solid #DDD;
+    border-radius: 16px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #444;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.15s ease;
+}
+
+.step-btn:active,
+.speed-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.speed-btn.active {
+    background: #FFB84D;
+    color: white;
+    border-color: #ff9800;
+}
+
+.toggle-btn {
+    padding: 8px 20px;
+    background: white;
+    border: 2px solid #DDD;
+    border-radius: 18px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #666;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.15s ease;
+}
+
+.toggle-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.toggle-btn.active {
+    background: #5AC8FA;
+    color: white;
+    border-color: #2da8e8;
+}
+
+/* ==================== Celebration Overlay ==================== */
+#overlay-celebrate {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+#overlay-celebrate.show {
+    display: flex;
+}
+
+.celebrate-box {
+    background: white;
+    border-radius: 28px;
+    padding: 28px 36px;
+    text-align: center;
+    animation: zoom-rotate-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    max-width: 320px;
+}
+
+@keyframes zoom-rotate-in {
+    0% {
+        transform: scale(0.3) rotate(-8deg);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+.hanamaru {
+    font-size: 84px;
+    margin-bottom: 12px;
+    animation: pulse-glow 1.2s ease-in-out infinite;
+    display: inline-block;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(255, 200, 100, 0.5)); }
+    50% { transform: scale(1.1); filter: drop-shadow(0 0 16px rgba(255, 200, 100, 0.8)); }
+}
+
+#celebrate-text {
+    font-size: 1.6rem;
+    color: #FF6B9D;
+    margin: 0 0 16px 0;
+    font-weight: bold;
+}
+
+#celebrate-stars {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.star {
+    font-size: 40px;
+    color: #ddd;
+    transition: all 0.15s ease;
+}
+
+.star.on {
+    color: #FFD700;
+    animation: star-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+.star:nth-child(2).on {
+    animation-delay: 0.1s;
+}
+
+.star:nth-child(3).on {
+    animation-delay: 0.2s;
+}
+
+@keyframes star-pop {
+    0% {
+        transform: scale(0) rotate(-45deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+.celebrate-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+#btn-celebrate-again {
+    padding: 10px 20px;
+    background: white;
+    border: 2px solid #FF6B9D;
+    border-radius: 18px;
+    color: #FF6B9D;
+    font-weight: bold;
+    font-size: 0.95rem;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 4px 0 rgba(255, 107, 157, 0.2);
+    transition: all 0.15s ease;
+}
+
+#btn-celebrate-again:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 rgba(255, 107, 157, 0.2);
+}
+
+#btn-celebrate-next {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #FF6B9D, #ff4f8b);
+    color: white;
+    border: none;
+    border-radius: 18px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 4px 0 rgba(255, 107, 157, 0.4);
+    transition: all 0.15s ease;
+}
+
+#btn-celebrate-next:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 rgba(255, 107, 157, 0.4);
+}
+
+/* Confetti */
+.confetti-piece {
+    position: fixed;
+    top: -20px;
+    left: var(--x);
+    width: 10px;
+    height: 14px;
+    background: var(--c);
+    border-radius: 3px;
+    animation: confetti-fall var(--d) linear var(--delay) both;
+    z-index: 101;
+    pointer-events: none;
+}
+
+@keyframes confetti-fall {
+    to {
+        transform: translateY(110vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* ==================== Responsive Adjustments ==================== */
+@media (max-width: 480px) {
+    body {
+        padding: 0;
+    }
+
+    .screen {
+        padding: 0 12px 32px 12px;
+    }
+
+    .app-title {
+        font-size: 1.6rem;
+    }
+
+    .app-subtitle {
+        font-size: 0.85rem;
+    }
+
+    .cat-buttons {
+        max-width: 100%;
+    }
+
+    .cat-btn {
+        min-height: 72px;
+        font-size: 1.1rem;
+    }
+
+    .cat-sample {
+        width: 40px;
+        height: 40px;
+        font-size: 22px;
+    }
+
+    .stage-card {
+        width: min(92vw, 100%);
+    }
+
+    .celebrate-box {
+        padding: 20px 24px;
+        max-width: 280px;
+    }
+
+    .hanamaru {
+        font-size: 72px;
+    }
+
+    #celebrate-text {
+        font-size: 1.4rem;
+    }
+
+    .star {
+        font-size: 32px;
+    }
+}

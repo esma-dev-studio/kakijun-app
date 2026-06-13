@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>かきじゅんマスター</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Home Screen -->
+    <div id="screen-home" class="screen active">
+        <h1 class="app-title">かきじゅんマスター <span class="mascot">🖌️</span></h1>
+        <p class="app-subtitle">ひらがな・カタカナ・かんじの かきじゅんを おぼえよう!</p>
+
+        <div class="cat-buttons">
+            <button id="btn-cat-hiragana" class="cat-btn" data-cat="hiragana">
+                <span class="cat-sample">あ</span>
+                <span class="cat-name">ひらがな</span>
+                <span class="cat-progress"></span>
+            </button>
+            <button id="btn-cat-katakana" class="cat-btn" data-cat="katakana">
+                <span class="cat-sample">ア</span>
+                <span class="cat-name">カタカナ</span>
+                <span class="cat-progress"></span>
+            </button>
+            <button id="btn-cat-kanji1" class="cat-btn" data-cat="kanji1">
+                <span class="cat-sample">一</span>
+                <span class="cat-name">かんじ 1ねんせい</span>
+                <span class="cat-progress"></span>
+            </button>
+            <button id="btn-cat-kanji2" class="cat-btn" data-cat="kanji2">
+                <span class="cat-sample">引</span>
+                <span class="cat-name">かんじ 2ねんせい</span>
+                <span class="cat-progress"></span>
+            </button>
+        </div>
+
+        <button id="btn-sound" class="sound-btn">🔊</button>
+
+        <footer class="credit">かきじゅんデータ: <a href="https://kanjivg.tagaini.net" target="_blank" rel="noopener">KanjiVG</a> © Ulrich Apel (CC BY-SA 3.0)</footer>
+    </div>
+
+    <!-- Character List Screen -->
+    <div id="screen-list" class="screen">
+        <header class="bar">
+            <button id="btn-list-back" class="back-btn">← もどる</button>
+            <h2 id="list-title"></h2>
+        </header>
+        <div id="char-grid"></div>
+    </div>
+
+    <!-- Practice Screen -->
+    <div id="screen-practice" class="screen">
+        <header class="bar">
+            <button id="btn-practice-back" class="back-btn">← もどる</button>
+            <button id="btn-prev-char" class="nav-btn">◀</button>
+            <div class="char-info">
+                <span id="practice-char-label"></span>
+                <span id="practice-stroke-count"></span>
+            </div>
+            <button id="btn-next-char" class="nav-btn">▶</button>
+        </header>
+
+        <div class="mode-tabs">
+            <button id="tab-watch" class="mode-tab active">👀 みる</button>
+            <button id="tab-trace" class="mode-tab">✏️ なぞる</button>
+        </div>
+
+        <div class="stage-card">
+            <svg id="stage" viewBox="0 0 109 109"></svg>
+        </div>
+
+        <div id="trace-msg"></div>
+
+        <!-- Watch Controls -->
+        <div id="watch-controls">
+            <button id="btn-play" class="big-btn">▶ さいせい</button>
+
+            <div class="step-row" id="step-row">
+                <button id="btn-step-prev" class="step-btn">◀ もどる</button>
+                <button id="btn-step-next" class="step-btn">すすむ ▶</button>
+            </div>
+
+            <div class="speed-row" id="speed-row">
+                <button class="speed-btn" data-speed="slow">🐢 ゆっくり</button>
+                <button class="speed-btn active" data-speed="normal">🚶 ふつう</button>
+                <button class="speed-btn" data-speed="fast">🐇 はやい</button>
+            </div>
+
+            <button id="btn-numbers" class="toggle-btn active">① ばんごう</button>
+        </div>
+
+        <!-- Trace Controls -->
+        <div id="trace-controls" class="hidden">
+            <button id="btn-trace-restart" class="big-btn">🔄 さいしょから</button>
+        </div>
+    </div>
+
+    <!-- Celebration Overlay -->
+    <div id="overlay-celebrate">
+        <div class="celebrate-box">
+            <div class="hanamaru">💮</div>
+            <h2 id="celebrate-text">よくできました!</h2>
+            <div id="celebrate-stars">
+                <span class="star"></span>
+                <span class="star"></span>
+                <span class="star"></span>
+            </div>
+            <div class="celebrate-btns">
+                <button id="btn-celebrate-again">🔄 もういちど</button>
+                <button id="btn-celebrate-next">つぎへ ▶</button>
+            </div>
+        </div>
+        <div id="confetti-box"></div>
+    </div>
+
+    <!-- Scripts in order -->
+    <script src="data/hiragana.js"></script>
+    <script src="data/katakana.js"></script>
+    <script src="data/kanji1.js"></script>
+    <script src="data/kanji2.js"></script>
+    <script src="js/sounds.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/tracer.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
