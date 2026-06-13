@@ -46,6 +46,21 @@
   const btnCelebrateAgain = document.getElementById('btn-celebrate-again');
   const btnCelebrateNext = document.getElementById('btn-celebrate-next');
   const confettiBox = document.getElementById('confetti-box');
+  const celebrateRewards = document.getElementById('celebrate-rewards');
+  // ダッシュボード
+  const levelRing = document.getElementById('level-ring');
+  const playerLevelEl = document.getElementById('player-level');
+  const xpTextEl = document.getElementById('xp-text');
+  const xpFillEl = document.getElementById('xp-fill');
+  const dailyDotsEl = document.getElementById('daily-dots');
+  const statStreakEl = document.getElementById('stat-streak');
+  const statStarsEl = document.getElementById('stat-stars');
+  const statBadgesEl = document.getElementById('stat-badges');
+  // バッジ画面
+  const btnBadges = document.getElementById('btn-badges');
+  const btnBadgesBack = document.getElementById('btn-badges-back');
+  const badgesSummary = document.getElementById('badges-summary');
+  const badgeGrid = document.getElementById('badge-grid');
 
   // State
   let state = {
@@ -86,6 +101,18 @@
 
   // Initialize
   function init() {
+    // Gamify にカテゴリの文字リストを渡す
+    Gamify.init({
+      hiragana: Object.keys(HIRAGANA_DATA),
+      katakana: Object.keys(KATAKANA_DATA),
+      kanji1: Object.keys(KANJI1_DATA),
+      kanji2: Object.keys(KANJI2_DATA),
+    });
+    // 旧バージョンの進捗があれば XP・バッジを遡って反映
+    if (Gamify.reconcile(storage)) {
+      saveStorage(storage);
+    }
+
     Sounds.setOn(storage.soundOn !== false);
     updateSoundBtn();
 
@@ -100,8 +127,11 @@
     // List screen
     btnListBack.addEventListener('click', () => {
       showScreen('screen-home');
-      updateCategoryProgress();
     });
+
+    // Badges screen
+    btnBadges.addEventListener('click', openBadges);
+    btnBadgesBack.addEventListener('click', () => showScreen('screen-home'));
 
     // Practice screen
     btnPracticeBack.addEventListener('click', () => {
@@ -191,7 +221,6 @@
     });
 
     showScreen('screen-home');
-    updateCategoryProgress();
   }
 
   function updateSoundBtn() {
@@ -205,6 +234,7 @@
       screen.classList.add('active');
       if (id === 'screen-home') {
         updateCategoryProgress();
+        renderDashboard();
       }
     }
   }
@@ -226,6 +256,60 @@
         }
       }
     });
+  }
+
+  // ホームのダッシュボードを描画
+  function renderDashboard() {
+    const st = Gamify.stats(storage);
+    const li = st.levelInfo;
+    playerLevelEl.textContent = li.level;
+    levelRing.style.background =
+      `conic-gradient(var(--primary) ${li.pct * 3.6}deg, var(--line) 0deg)`;
+    xpTextEl.textContent = `${li.into} / ${li.need}`;
+    xpFillEl.style.width = `${li.pct}%`;
+    statStreakEl.textContent = st.streak;
+    statStarsEl.textContent = st.stars;
+    statBadgesEl.textContent = `${st.badges}/${st.badgeTotal}`;
+
+    // きょうのもくひょう (ドット + 達成表示)
+    dailyDotsEl.innerHTML = '';
+    const goal = st.dailyGoal;
+    const done = Math.min(st.todayCount, goal);
+    for (let i = 0; i < goal; i++) {
+      const dot = document.createElement('span');
+      dot.className = 'daily-dot' + (i < done ? ' on' : '');
+      dailyDotsEl.appendChild(dot);
+    }
+    if (st.todayCount >= goal) {
+      const tag = document.createElement('span');
+      tag.className = 'daily-done';
+      tag.textContent = 'たっせい!';
+      dailyDotsEl.appendChild(tag);
+    }
+  }
+
+  // バッジ画面
+  function openBadges() {
+    Sounds.play('tap');
+    const st = Gamify.stats(storage);
+    badgesSummary.textContent = `${st.badges} / ${st.badgeTotal} こ あつめたよ!`;
+    badgeGrid.innerHTML = '';
+    Gamify.BADGES.forEach((b, i) => {
+      const earned = Gamify.isBadgeEarned(storage, b.id);
+      const cell = document.createElement('div');
+      cell.className = 'badge-cell' + (earned ? '' : ' locked');
+      cell.style.animationDelay = `${i * 0.03}s`;
+      const date = earned ? Gamify.badgeDate(storage, b.id) : null;
+      cell.innerHTML =
+        `<span class="badge-ico">${earned ? b.icon : '🔒'}</span>` +
+        `<span class="badge-text">` +
+        `<span class="badge-name">${b.name}</span>` +
+        `<span class="badge-desc">${b.desc}</span>` +
+        (date ? `<span class="badge-date">${date} に ゲット</span>` : '') +
+        `</span>`;
+      badgeGrid.appendChild(cell);
+    });
+    showScreen('screen-badges');
   }
 
   function openCategory(cat) {
@@ -350,15 +434,22 @@
 
   function onAllDone(totalFails) {
     const stars = totalFails === 0 ? 3 : totalFails <= 2 ? 2 : 1;
-    storage.done[state.char] = true;
-    const oldStars = storage.stars[state.char] || 0;
-    storage.stars[state.char] = Math.max(oldStars, stars);
+    // Gamify が done/stars/xp/streak/バッジ をまとめて更新
+    const result = Gamify.recordCompletion(storage, state.char, stars);
     saveStorage(storage);
     Sounds.play('fanfare');
-    celebrate(stars);
+    celebrate(stars, result);
+
+    // レベルアップ・バッジ獲得は少し遅らせて専用音を重ねる
+    if (result.leveledUp) {
+      setTimeout(() => Sounds.play('levelup'), 650);
+    }
+    if (result.newBadges.length) {
+      setTimeout(() => Sounds.play('badge'), result.leveledUp ? 1100 : 700);
+    }
   }
 
-  function celebrate(stars) {
+  function celebrate(stars, result) {
     const messages = ['よくできました!', 'すごい!', 'かんぺき!', 'はなまる!'];
     const msg = messages[Math.floor(Math.random() * messages.length)];
     celebrateText.textContent = msg;
@@ -369,6 +460,9 @@
       s.textContent = '';
       s.classList.toggle('on', i < stars);
     });
+
+    // ごほうび (XP / レベルアップ / 新バッジ)
+    renderRewards(result);
 
     confettiBox.innerHTML = '';
     const colors = [
@@ -398,5 +492,39 @@
     setTimeout(() => {
       confettiBox.innerHTML = '';
     }, 3500);
+  }
+
+  // おいわい内の「ごほうび」表示 (XP・レベルアップ・新バッジ)
+  function renderRewards(result) {
+    celebrateRewards.innerHTML = '';
+    if (!result) return;
+
+    const xp = document.createElement('div');
+    xp.className = 'reward-xp';
+    xp.textContent = `+${result.xpGain} XP`;
+    celebrateRewards.appendChild(xp);
+
+    if (result.leveledUp) {
+      const lv = document.createElement('div');
+      lv.className = 'reward-level';
+      lv.textContent = `🎉 レベル ${result.level} に なった!`;
+      celebrateRewards.appendChild(lv);
+    }
+
+    if (result.newBadges && result.newBadges.length) {
+      const wrap = document.createElement('div');
+      wrap.className = 'reward-badges';
+      result.newBadges.forEach((b, i) => {
+        const chip = document.createElement('div');
+        chip.className = 'reward-badge';
+        chip.style.animationDelay = `${0.45 + i * 0.15}s`;
+        chip.innerHTML =
+          `<span class="rb-new">NEW</span>` +
+          `<span class="rb-ico">${b.icon}</span>` +
+          `<span>${b.name}</span>`;
+        wrap.appendChild(chip);
+      });
+      celebrateRewards.appendChild(wrap);
+    }
   }
 })();

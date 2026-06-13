@@ -132,6 +132,38 @@ const Sounds = (() => {
         osc.start(ct);
         osc.stop(ct + 0.25);
       }
+    } else if (name === 'badge') {
+      // バッジ獲得: キラッと上昇する4音 + ベル感
+      const notes = [659.25, 880, 1108.73, 1318.51]; // E5 A5 C#6 E6
+      for (let i = 0; i < 4; i++) {
+        const t = now + i * 0.08;
+        const osc = c.createOscillator();
+        osc.type = 'triangle';
+        osc.frequency.value = notes[i];
+        const gain = c.createGain();
+        gain.gain.setValueAtTime(0.14, t);
+        gain.gain.exponentialRampToValueAtTime(0.01, t + 0.22);
+        osc.connect(gain);
+        gain.connect(c.destination);
+        osc.start(t);
+        osc.stop(t + 0.22);
+      }
+    } else if (name === 'levelup') {
+      // レベルアップ: ファンファーレ風の力強い上昇
+      const notes = [523.25, 659.25, 783.99, 1046.5, 1318.51]; // C5 E5 G5 C6 E6
+      for (let i = 0; i < notes.length; i++) {
+        const t = now + i * 0.1;
+        const osc = c.createOscillator();
+        osc.type = i < 3 ? 'square' : 'triangle';
+        osc.frequency.value = notes[i];
+        const gain = c.createGain();
+        gain.gain.setValueAtTime(0.12, t);
+        gain.gain.exponentialRampToValueAtTime(0.01, t + 0.3);
+        osc.connect(gain);
+        gain.connect(c.destination);
+        osc.start(t);
+        osc.stop(t + 0.3);
+      }
     }
   };
 

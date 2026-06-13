@@ -23,6 +23,46 @@
             <p class="app-subtitle">ひらがな・カタカナ・かんじの かきじゅんを<br>たのしく おぼえよう!</p>
         </header>
 
+        <!-- プレイヤーダッシュボード -->
+        <section class="player-card" aria-label="あなたの きろく">
+            <div class="player-main">
+                <div class="level-ring" id="level-ring">
+                    <div class="level-ring-inner">
+                        <span class="level-cap">レベル</span>
+                        <span id="player-level" class="level-num">1</span>
+                    </div>
+                </div>
+                <div class="player-info">
+                    <div class="player-info-top">
+                        <span class="xp-next">つぎの レベルまで</span>
+                        <span id="xp-text" class="xp-text">0 / 40</span>
+                    </div>
+                    <div class="xp-bar"><span id="xp-fill" class="xp-fill"></span></div>
+                    <div class="daily-row">
+                        <span class="daily-label">きょうの もくひょう</span>
+                        <span id="daily-dots" class="daily-dots"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-chips">
+                <div class="stat-chip">
+                    <span class="stat-ico">🔥</span>
+                    <span class="stat-val" id="stat-streak">0</span>
+                    <span class="stat-cap">れんぞく</span>
+                </div>
+                <div class="stat-chip">
+                    <span class="stat-ico">⭐</span>
+                    <span class="stat-val" id="stat-stars">0</span>
+                    <span class="stat-cap">ほし</span>
+                </div>
+                <button id="btn-badges" class="stat-chip chip-btn">
+                    <span class="stat-ico">🏅</span>
+                    <span class="stat-val" id="stat-badges">0</span>
+                    <span class="stat-cap">バッジ ›</span>
+                </button>
+            </div>
+        </section>
+
         <nav class="cat-buttons">
             <button id="btn-cat-hiragana" class="cat-btn" data-cat="hiragana">
                 <span class="cat-sample" aria-hidden="true">あ</span>
@@ -122,6 +162,17 @@
         </div>
     </div>
 
+    <!-- バッジ コレクション -->
+    <div id="screen-badges" class="screen">
+        <header class="bar">
+            <button id="btn-badges-back" class="back-btn">← もどる</button>
+            <h2 id="badges-title">バッジ</h2>
+            <span class="bar-spacer" aria-hidden="true"></span>
+        </header>
+        <p id="badges-summary" class="badges-summary"></p>
+        <div id="badge-grid" class="badge-grid"></div>
+    </div>
+
     <!-- かんせい おいわい -->
     <div id="overlay-celebrate">
         <div class="celebrate-box">
@@ -132,6 +183,7 @@
                 <span class="star"></span>
                 <span class="star"></span>
             </div>
+            <div id="celebrate-rewards" class="celebrate-rewards"></div>
             <div class="celebrate-btns">
                 <button id="btn-celebrate-again">🔄 もういちど</button>
                 <button id="btn-celebrate-next">つぎへ ▶</button>
@@ -148,6 +200,7 @@
     <script src="js/sounds.js"></script>
     <script src="js/player.js"></script>
     <script src="js/tracer.js"></script>
+    <script src="js/gamify.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

@@ -927,11 +927,396 @@ header.bar {
     ::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: 8px; }
 }
 
+/* ============================================================
+   プレイヤーダッシュボード (ホーム)
+   ============================================================ */
+.player-card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--card);
+    border: 2px solid var(--line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    padding: 16px 16px 14px;
+    margin-bottom: 22px;
+}
+
+.player-main {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.level-ring {
+    width: 76px;
+    height: 76px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: conic-gradient(var(--primary) 0deg, var(--line) 0deg);
+    display: grid;
+    place-items: center;
+    transition: background 0.7s var(--ease-out);
+}
+
+.level-ring-inner {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--card);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.level-cap {
+    font-size: 0.5rem;
+    font-weight: 900;
+    color: var(--ink-mute);
+    letter-spacing: 0.08em;
+    margin-bottom: 1px;
+}
+
+.level-num {
+    font-size: 1.55rem;
+    font-weight: 900;
+    color: var(--primary-deep);
+}
+
+.player-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.player-info-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+}
+
+.xp-next {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--ink-soft);
+}
+
+.xp-text {
+    font-size: 0.74rem;
+    font-weight: 900;
+    color: var(--primary-deep);
+    font-variant-numeric: tabular-nums;
+}
+
+.xp-bar {
+    width: 100%;
+    height: 11px;
+    background: var(--line);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+}
+
+.xp-fill {
+    display: block;
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #FF9CC0, var(--primary));
+    border-radius: var(--radius-pill);
+    transition: width 0.7s var(--ease-out);
+}
+
+.daily-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.daily-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--ink-soft);
+}
+
+.daily-dots {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.daily-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--line);
+    border: 2px solid var(--line-strong);
+    transition: transform 0.3s var(--ease-pop), background 0.3s, border-color 0.3s;
+}
+
+.daily-dot.on {
+    background: var(--gold);
+    border-color: var(--gold-deep);
+    transform: scale(1.12);
+}
+
+.daily-done {
+    font-size: 0.72rem;
+    font-weight: 900;
+    color: var(--gold-deep);
+    margin-left: 2px;
+}
+
+/* ステータスチップ */
+.stat-chips {
+    display: flex;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.stat-chip {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 9px 6px;
+    background: var(--paper);
+    border: 2px solid var(--line);
+    border-radius: 16px;
+}
+
+.chip-btn {
+    transition: transform 0.14s var(--ease-out), border-color 0.14s, background 0.14s;
+}
+
+@media (hover: hover) {
+    .chip-btn:hover {
+        background: var(--gold-tint);
+        border-color: var(--gold-line);
+    }
+}
+
+.chip-btn:active {
+    transform: scale(0.95);
+}
+
+.stat-ico {
+    font-size: 1.05rem;
+    line-height: 1;
+}
+
+.stat-val {
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+}
+
+.stat-cap {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--ink-soft);
+    white-space: nowrap;
+}
+
+/* ============================================================
+   バッジ コレクション
+   ============================================================ */
+.badges-summary {
+    margin: 0 0 18px;
+    font-size: 0.95rem;
+    font-weight: 900;
+    color: var(--primary-deep);
+    text-align: center;
+}
+
+.badge-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    width: 100%;
+    max-width: 440px;
+}
+
+.badge-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    background: var(--card);
+    border: 2px solid var(--gold-line);
+    border-radius: 20px;
+    box-shadow: 0 3px 0 var(--gold-line), var(--shadow-card);
+    animation: badge-cell-in 0.4s var(--ease-pop) backwards;
+}
+
+@keyframes badge-cell-in {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+.badge-cell.locked {
+    border-color: var(--line);
+    box-shadow: none;
+    background: var(--paper);
+}
+
+.badge-ico {
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    background: var(--gold-tint);
+    border-radius: 15px;
+}
+
+.badge-cell.locked .badge-ico {
+    background: var(--line);
+    filter: grayscale(1) opacity(0.55);
+}
+
+.badge-text {
+    min-width: 0;
+    flex: 1;
+}
+
+.badge-name {
+    display: block;
+    font-size: 0.92rem;
+    font-weight: 900;
+    color: var(--ink);
+    line-height: 1.25;
+}
+
+.badge-cell.locked .badge-name {
+    color: var(--ink-mute);
+}
+
+.badge-desc {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--ink-soft);
+    margin-top: 2px;
+    line-height: 1.3;
+}
+
+.badge-date {
+    display: block;
+    font-size: 0.66rem;
+    font-weight: 700;
+    color: var(--gold-deep);
+    margin-top: 3px;
+}
+
+/* ============================================================
+   おいわい — ごほうび (XP / レベルアップ / バッジ)
+   ============================================================ */
+.celebrate-rewards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 20px;
+}
+
+.celebrate-rewards:empty {
+    margin: 0;
+}
+
+.reward-xp {
+    font-size: 0.92rem;
+    font-weight: 900;
+    color: var(--primary-deep);
+    animation: reward-in 0.4s var(--ease-pop) 0.2s backwards;
+}
+
+.reward-level {
+    font-size: 1rem;
+    font-weight: 900;
+    color: #fff;
+    background: linear-gradient(135deg, #FFB84D, var(--gold-deep));
+    padding: 6px 16px;
+    border-radius: var(--radius-pill);
+    box-shadow: 0 4px 12px rgba(239, 165, 30, 0.4);
+    animation: reward-pop 0.5s var(--ease-pop) 0.35s backwards;
+}
+
+.reward-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 2px;
+}
+
+.reward-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 13px 7px 8px;
+    background: var(--gold-tint);
+    border: 2px solid var(--gold-line);
+    border-radius: var(--radius-pill);
+    font-size: 0.8rem;
+    font-weight: 900;
+    color: var(--gold-deep);
+    animation: reward-pop 0.5s var(--ease-pop) backwards;
+}
+
+.reward-badge .rb-ico {
+    font-size: 1.1rem;
+}
+
+.reward-badge .rb-new {
+    font-size: 0.6rem;
+    font-weight: 900;
+    color: #fff;
+    background: var(--primary);
+    padding: 2px 5px;
+    border-radius: var(--radius-pill);
+    letter-spacing: 0.04em;
+}
+
+@keyframes reward-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes reward-pop {
+    0%   { opacity: 0; transform: scale(0.5); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* ============================================================
+   ダッシュボード/バッジ レスポンシブ
+   ============================================================ */
+@media (max-width: 480px) {
+    .level-ring { width: 68px; height: 68px; }
+    .level-ring-inner { width: 54px; height: 54px; }
+    .level-num { font-size: 1.4rem; }
+    .stat-chips { gap: 6px; }
+    .stat-chip { gap: 3px; padding: 8px 3px; }
+    .stat-ico { font-size: 0.95rem; }
+    .stat-val { font-size: 0.95rem; }
+    .stat-cap { font-size: 0.6rem; }
+    .badge-grid { grid-template-columns: 1fr; gap: 10px; }
+    .badge-cell { padding: 12px; }
+}
+
 /* ---------- Reduced Motion ---------- */
 @media (prefers-reduced-motion: reduce) {
     .hero-badge,
     .hanamaru,
-    .confetti-piece {
+    .confetti-piece,
+    .badge-cell,
+    .reward-xp,
+    .reward-level,
+    .reward-badge {
         animation: none !important;
     }
 
