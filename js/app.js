@@ -69,6 +69,7 @@
     mode: 'watch',
     speed: 'normal',
   };
+  let watchPlayTimer = null; // みるモードの自動再生タイマー
 
   // Player and Tracer
   let player = new StrokePlayer(stageEl);
@@ -135,6 +136,7 @@
 
     // Practice screen
     btnPracticeBack.addEventListener('click', () => {
+      cancelWatchPlay();
       tracer.stop();
       player.stop();
       openCategory(state.cat);
@@ -288,27 +290,46 @@
     }
   }
 
-  // バッジ画面
+  // バッジ画面 (系統ごとにセクション分け)
   function openBadges() {
     Sounds.play('tap');
     const st = Gamify.stats(storage);
     badgesSummary.textContent = `${st.badges} / ${st.badgeTotal} こ あつめたよ!`;
     badgeGrid.innerHTML = '';
-    Gamify.BADGES.forEach((b, i) => {
-      const earned = Gamify.isBadgeEarned(storage, b.id);
-      const cell = document.createElement('div');
-      cell.className = 'badge-cell' + (earned ? '' : ' locked');
-      cell.style.animationDelay = `${i * 0.03}s`;
-      const date = earned ? Gamify.badgeDate(storage, b.id) : null;
-      cell.innerHTML =
-        `<span class="badge-ico">${earned ? b.icon : '🔒'}</span>` +
-        `<span class="badge-text">` +
-        `<span class="badge-name">${b.name}</span>` +
-        `<span class="badge-desc">${b.desc}</span>` +
-        (date ? `<span class="badge-date">${date} に ゲット</span>` : '') +
-        `</span>`;
-      badgeGrid.appendChild(cell);
+
+    Gamify.GROUPS.forEach((g) => {
+      const items = Gamify.BADGES.filter((b) => b.group === g.key);
+      if (!items.length) return;
+      const earnedN = items.filter((b) => Gamify.isBadgeEarned(storage, b.id)).length;
+
+      const section = document.createElement('section');
+      section.className = 'badge-section';
+      const h = document.createElement('h3');
+      h.className = 'badge-group';
+      h.innerHTML = `<span>${g.label}</span><span class="badge-group-count">${earnedN} / ${items.length}</span>`;
+      section.appendChild(h);
+
+      const row = document.createElement('div');
+      row.className = 'badge-row';
+      items.forEach((b, i) => {
+        const earned = Gamify.isBadgeEarned(storage, b.id);
+        const cell = document.createElement('div');
+        cell.className = 'badge-cell' + (earned ? '' : ' locked');
+        cell.style.animationDelay = `${Math.min(i * 0.02, 0.3)}s`;
+        const date = earned ? Gamify.badgeDate(storage, b.id) : null;
+        cell.innerHTML =
+          `<span class="badge-ico">${earned ? b.icon : '🔒'}</span>` +
+          `<span class="badge-text">` +
+          `<span class="badge-name">${b.name}</span>` +
+          `<span class="badge-desc">${b.desc}</span>` +
+          (date ? `<span class="badge-date">${date} に ゲット</span>` : '') +
+          `</span>`;
+        row.appendChild(cell);
+      });
+      section.appendChild(row);
+      badgeGrid.appendChild(section);
     });
+
     showScreen('screen-badges');
   }
 
@@ -327,6 +348,10 @@
       btn.className = 'char-btn';
       if (storage.done[c]) {
         btn.classList.add('done');
+        const tier = Gamify.charTier(Gamify.playsOf(storage, c));
+        if (tier !== 'done' && tier !== 'none') {
+          btn.dataset.tier = tier; // 🥉🥈🥇 メダル表示
+        }
       }
       btn.dataset.char = c;
       btn.textContent = c;
@@ -376,6 +401,15 @@
     openChar(cat, chars[newIdx]);
   }
 
+  // みるモードの自動再生は遅延起動するので、モード切替時に必ず取り消す
+  // (これをしないと、字をひらいて すぐ「なぞる」を押したとき再生が割り込む)
+  function cancelWatchPlay() {
+    if (watchPlayTimer) {
+      clearTimeout(watchPlayTimer);
+      watchPlayTimer = null;
+    }
+  }
+
   function switchToWatch() {
     state.mode = 'watch';
     tabWatch.classList.add('active');
@@ -385,12 +419,15 @@
     tracer.stop();
     traceMsg.textContent = '';
     player.reset();
-    setTimeout(() => {
+    cancelWatchPlay();
+    watchPlayTimer = setTimeout(() => {
+      watchPlayTimer = null;
       player.play(state.speed);
     }, 350);
   }
 
   function switchToTrace() {
+    cancelWatchPlay();
     state.mode = 'trace';
     tabWatch.classList.remove('active');
     tabTrace.classList.add('active');
@@ -402,6 +439,7 @@
   function startTrace() {
     const catData = CATEGORIES[state.cat];
     const charData = catData.data[state.char];
+    cancelWatchPlay();
     player.reset();
     tracer.start(charData);
     setMsg('あかい まるから なぞってね!');
@@ -440,19 +478,30 @@
     Sounds.play('fanfare');
     celebrate(stars, result);
 
-    // レベルアップ・バッジ獲得は少し遅らせて専用音を重ねる
+    // メダル昇格・レベルアップ・バッジ獲得は少し遅らせて専用音を重ねる
+    let delay = 650;
+    if (result.medal) {
+      setTimeout(() => Sounds.play('badge'), delay);
+      delay += 450;
+    }
     if (result.leveledUp) {
-      setTimeout(() => Sounds.play('levelup'), 650);
+      setTimeout(() => Sounds.play('levelup'), delay);
+      delay += 450;
     }
     if (result.newBadges.length) {
-      setTimeout(() => Sounds.play('badge'), result.leveledUp ? 1100 : 700);
+      setTimeout(() => Sounds.play('badge'), delay);
     }
   }
 
   function celebrate(stars, result) {
-    const messages = ['よくできました!', 'すごい!', 'かんぺき!', 'はなまる!'];
-    const msg = messages[Math.floor(Math.random() * messages.length)];
-    celebrateText.textContent = msg;
+    // メッセージは「はじめて」か「くり返し」かで変える
+    let pool;
+    if (result && !result.firstTime) {
+      pool = ['すごい!', 'じょうず!', 'かんぺき!', 'やったね!', 'その ちょうし!'];
+    } else {
+      pool = ['はじめて かけたね!', 'よくできました!', 'はなまる!', 'すごい!'];
+    }
+    celebrateText.textContent = pool[Math.floor(Math.random() * pool.length)];
 
     // ★はCSSの::beforeで描画 (未獲得はグレーの★)。クラスだけ切り替える
     const starSpans = celebrateStars.querySelectorAll('.star');
@@ -465,15 +514,13 @@
     renderRewards(result);
 
     confettiBox.innerHTML = '';
-    const colors = [
-      '#FF6B9D',
-      '#FFD700',
-      '#5AC8FA',
-      '#7CCD7C',
-      '#FFB84D',
-      '#b39ddb',
-    ];
-    for (let i = 0; i < 26; i++) {
+    // メダル昇格・レベルアップなど特別なときは紙ふぶき増量＆金色多め
+    const special = result && (result.medal || result.leveledUp);
+    const colors = result && result.medal === 'gold'
+      ? ['#FFD700', '#FFC53D', '#FFB84D', '#FFE08A', '#FF6B9D', '#5AC8FA']
+      : ['#FF6B9D', '#FFD700', '#5AC8FA', '#7CCD7C', '#FFB84D', '#b39ddb'];
+    const pieces = special ? 44 : 26;
+    for (let i = 0; i < pieces; i++) {
       const piece = document.createElement('span');
       piece.className = 'confetti-piece';
       const x = Math.random() * 100;
@@ -494,16 +541,36 @@
     }, 3500);
   }
 
-  // おいわい内の「ごほうび」表示 (XP・レベルアップ・新バッジ)
+  // おいわい内の「ごほうび」表示 (くり返し・メダル・XP・レベル・新バッジ)
   function renderRewards(result) {
     celebrateRewards.innerHTML = '';
     if (!result) return;
 
+    // ○かいめ! (2回目以降に特別感)
+    if (result.playCount >= 2) {
+      const pill = document.createElement('div');
+      pill.className = 'reward-count';
+      pill.textContent = `${result.playCount}かいめ クリア!`;
+      celebrateRewards.appendChild(pill);
+    }
+
+    // メダル昇格 (3回🥉 / 5回🥈 / 10回🥇)
+    if (result.medal) {
+      const info = Gamify.TIER_INFO[result.medal];
+      const medal = document.createElement('div');
+      medal.className = `reward-medal medal-${result.medal}`;
+      medal.innerHTML = `<span class="rm-ico">${info.icon}</span>` +
+        `<span>${info.label} メダル ゲット!</span>`;
+      celebrateRewards.appendChild(medal);
+    }
+
+    // 獲得XP
     const xp = document.createElement('div');
     xp.className = 'reward-xp';
     xp.textContent = `+${result.xpGain} XP`;
     celebrateRewards.appendChild(xp);
 
+    // レベルアップ
     if (result.leveledUp) {
       const lv = document.createElement('div');
       lv.className = 'reward-level';
@@ -511,19 +578,27 @@
       celebrateRewards.appendChild(lv);
     }
 
+    // 新バッジ
     if (result.newBadges && result.newBadges.length) {
       const wrap = document.createElement('div');
       wrap.className = 'reward-badges';
-      result.newBadges.forEach((b, i) => {
+      result.newBadges.slice(0, 6).forEach((b, i) => {
         const chip = document.createElement('div');
         chip.className = 'reward-badge';
-        chip.style.animationDelay = `${0.45 + i * 0.15}s`;
+        chip.style.animationDelay = `${0.45 + i * 0.12}s`;
         chip.innerHTML =
           `<span class="rb-new">NEW</span>` +
           `<span class="rb-ico">${b.icon}</span>` +
           `<span>${b.name}</span>`;
         wrap.appendChild(chip);
       });
+      if (result.newBadges.length > 6) {
+        const more = document.createElement('div');
+        more.className = 'reward-badge';
+        more.style.animationDelay = '1.2s';
+        more.innerHTML = `<span class="rb-ico">➕</span><span>ほか ${result.newBadges.length - 6}こ</span>`;
+        wrap.appendChild(more);
+      }
       celebrateRewards.appendChild(wrap);
     }
   }

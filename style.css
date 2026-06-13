@@ -435,6 +435,12 @@ header.bar {
     box-shadow: 0 1px 3px rgba(63, 58, 85, 0.12);
 }
 
+/* くり返しメダル (一覧での「成果の見える化」) */
+.char-btn.done[data-tier="bronze"]::after { content: "🥉"; border-color: #D89A6A; }
+.char-btn.done[data-tier="silver"]::after { content: "🥈"; border-color: #B7BEC9; }
+.char-btn.done[data-tier="gold"]::after   { content: "🥇"; border-color: var(--gold-deep); }
+.char-btn.done[data-tier="gold"] { background: var(--gold-tint); border-color: var(--gold); }
+
 /* ============================================================
    れんしゅう
    ============================================================ */
@@ -716,6 +722,8 @@ header.bar {
     animation: celebrate-in 0.5s var(--ease-pop);
     max-width: 340px;
     width: 100%;
+    max-height: 88vh;
+    overflow-y: auto;
     box-shadow: var(--shadow-float);
 }
 
@@ -1132,11 +1140,41 @@ header.bar {
 }
 
 .badge-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    width: 100%;
+    max-width: 460px;
+}
+
+.badge-section {
+    width: 100%;
+}
+
+.badge-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 0 4px 10px;
+    font-size: 1rem;
+    font-weight: 900;
+    color: var(--ink);
+}
+
+.badge-group-count {
+    font-size: 0.8rem;
+    font-weight: 900;
+    color: var(--primary-deep);
+    background: var(--primary-tint);
+    padding: 2px 10px;
+    border-radius: var(--radius-pill);
+    font-variant-numeric: tabular-nums;
+}
+
+.badge-row {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
-    width: 100%;
-    max-width: 440px;
 }
 
 .badge-cell {
@@ -1228,6 +1266,37 @@ header.bar {
     margin: 0;
 }
 
+.reward-count {
+    font-size: 0.98rem;
+    font-weight: 900;
+    color: var(--gold-deep);
+    background: var(--gold-tint);
+    border: 2px solid var(--gold-line);
+    padding: 6px 18px;
+    border-radius: var(--radius-pill);
+    animation: reward-pop 0.45s var(--ease-pop) 0.1s backwards;
+}
+
+.reward-medal {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: var(--radius-pill);
+    animation: reward-pop 0.5s var(--ease-pop) 0.25s backwards;
+}
+
+.reward-medal .rm-ico {
+    font-size: 1.45rem;
+}
+
+.medal-bronze { background: linear-gradient(135deg, #DBA274, #B97B47); box-shadow: 0 4px 12px rgba(185, 123, 71, 0.4); }
+.medal-silver { background: linear-gradient(135deg, #C9CFD8, #98A1B0); box-shadow: 0 4px 12px rgba(152, 161, 176, 0.4); }
+.medal-gold   { background: linear-gradient(135deg, #FFD95A, #E0A81E); box-shadow: 0 4px 14px rgba(224, 168, 30, 0.5); }
+
 .reward-xp {
     font-size: 0.92rem;
     font-weight: 900;
@@ -1304,7 +1373,7 @@ header.bar {
     .stat-ico { font-size: 0.95rem; }
     .stat-val { font-size: 0.95rem; }
     .stat-cap { font-size: 0.6rem; }
-    .badge-grid { grid-template-columns: 1fr; gap: 10px; }
+    .badge-row { grid-template-columns: 1fr; gap: 10px; }
     .badge-cell { padding: 12px; }
 }
 
@@ -1316,7 +1385,9 @@ header.bar {
     .badge-cell,
     .reward-xp,
     .reward-level,
-    .reward-badge {
+    .reward-badge,
+    .reward-count,
+    .reward-medal {
         animation: none !important;
     }
 
