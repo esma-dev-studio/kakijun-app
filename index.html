@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
     <!-- ホーム -->
@@ -160,6 +160,9 @@
         <div id="trace-controls" class="hidden">
             <button id="btn-trace-restart" class="big-btn ghost-btn">🔄 さいしょから</button>
         </div>
+
+        <!-- よみ・いみ・ことば (じょうほうカード) -->
+        <section id="char-info-card" class="info-card hidden" aria-label="よみかたと いみ"></section>
     </div>
 
     <!-- バッジ コレクション -->
@@ -193,14 +196,16 @@
     </div>
 
     <!-- Scripts in order -->
-    <script src="data/hiragana.js?v=3"></script>
-    <script src="data/katakana.js?v=3"></script>
-    <script src="data/kanji1.js?v=3"></script>
-    <script src="data/kanji2.js?v=3"></script>
-    <script src="js/sounds.js?v=3"></script>
-    <script src="js/player.js?v=3"></script>
-    <script src="js/tracer.js?v=3"></script>
-    <script src="js/gamify.js?v=3"></script>
-    <script src="js/app.js?v=3"></script>
+    <script src="data/hiragana.js?v=4"></script>
+    <script src="data/katakana.js?v=4"></script>
+    <script src="data/kanji1.js?v=4"></script>
+    <script src="data/kanji2.js?v=4"></script>
+    <script src="data/kanainfo.js?v=4"></script>
+    <script src="data/kanjiinfo.js?v=4"></script>
+    <script src="js/sounds.js?v=4"></script>
+    <script src="js/player.js?v=4"></script>
+    <script src="js/tracer.js?v=4"></script>
+    <script src="js/gamify.js?v=4"></script>
+    <script src="js/app.js?v=4"></script>
 </body>
 </html>

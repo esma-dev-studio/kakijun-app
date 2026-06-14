@@ -695,6 +695,149 @@ header.bar {
 }
 
 /* ============================================================
+   よみ・いみ・ことば カード (練習画面)
+   ============================================================ */
+.info-card {
+    width: min(88vw, 420px);
+    margin-top: 22px;
+    background: var(--card);
+    border: 2px solid var(--line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    padding: 16px 18px 18px;
+    text-align: left;
+}
+
+/* 読み (音・訓) */
+.info-readings {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 12px;
+}
+
+.rd-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.rd-label {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    font-size: 0.82rem;
+    font-weight: 900;
+    color: #fff;
+}
+
+.rd-label.on { background: #41AEEF; }
+.rd-label.kun { background: var(--primary); }
+
+.rd-vals {
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+}
+
+.rd-vals .okuri {
+    color: var(--ink-mute);
+    font-weight: 700;
+}
+
+/* 意味 */
+.info-mean {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--ink);
+    background: var(--paper);
+    border-radius: 12px;
+    padding: 9px 13px;
+    margin-bottom: 16px;
+}
+
+.info-section-title {
+    font-size: 0.72rem;
+    font-weight: 900;
+    color: var(--ink-mute);
+    letter-spacing: 0.08em;
+    margin: 0 0 9px 2px;
+}
+
+/* 例語 (ふりがな付きチップ) */
+.info-words {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-bottom: 16px;
+}
+
+.word-chip {
+    background: var(--gold-tint);
+    border: 1.5px solid var(--gold-line);
+    border-radius: 13px;
+    padding: 6px 13px 4px;
+    font-size: 1.12rem;
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.word-chip ruby rt {
+    font-size: 0.58em;
+    color: var(--gold-deep);
+    font-weight: 900;
+    letter-spacing: 0.02em;
+}
+
+/* 例文 */
+.info-ex {
+    background: var(--primary-tint);
+    border-radius: 14px;
+    padding: 12px 15px;
+}
+
+.ex-ja {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.5;
+}
+
+.ex-yomi {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--primary-deep);
+    margin-top: 5px;
+    letter-spacing: 0.02em;
+}
+
+/* かな: ことば + 絵文字 */
+.kana-word {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 6px 4px 2px;
+}
+
+.kana-emoji {
+    font-size: 50px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.kana-word-text {
+    font-size: 1.7rem;
+    font-weight: 900;
+    color: var(--ink);
+    letter-spacing: 0.03em;
+}
+
+/* ============================================================
    おいわいオーバーレイ
    ============================================================ */
 #overlay-celebrate {

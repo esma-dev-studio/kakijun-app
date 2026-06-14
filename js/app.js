@@ -28,6 +28,7 @@
   const btnNextChar = document.getElementById('btn-next-char');
   const practiceCharLabel = document.getElementById('practice-char-label');
   const practiceStrokeCount = document.getElementById('practice-stroke-count');
+  const charInfoCard = document.getElementById('char-info-card');
   const tabWatch = document.getElementById('tab-watch');
   const tabTrace = document.getElementById('tab-trace');
   const stageEl = document.getElementById('stage');
@@ -373,6 +374,7 @@
     practiceCharLabel.textContent = c;
     player.load(charData);
     practiceStrokeCount.textContent = `ぜんぶで ${player.strokeCount}かく`;
+    renderCharInfo(cat, c);
 
     if (state.mode === 'watch') {
       switchToWatch();
@@ -381,6 +383,54 @@
     }
 
     showScreen('screen-practice');
+  }
+
+  // 送り仮名 (.以降) を淡色に
+  function fmtKun(k) {
+    const i = k.indexOf('.');
+    if (i < 0) return k;
+    return k.slice(0, i) + '<span class="okuri">' + k.slice(i + 1) + '</span>';
+  }
+
+  // よみ・いみ・ことば カードを描画
+  function renderCharInfo(cat, c) {
+    const isKana = CATEGORIES[cat].kind === 'kana';
+
+    if (isKana) {
+      const info = (typeof KANA_INFO !== 'undefined') && KANA_INFO[c];
+      if (!info) { charInfoCard.classList.add('hidden'); return; }
+      charInfoCard.innerHTML =
+        '<div class="info-section-title">ことば</div>' +
+        `<div class="kana-word"><span class="kana-emoji">${info.e}</span>` +
+        `<span class="kana-word-text">${info.w}</span></div>`;
+      charInfoCard.classList.remove('hidden');
+      return;
+    }
+
+    const info = (typeof KANJI_INFO !== 'undefined') && KANJI_INFO[c];
+    if (!info) { charInfoCard.classList.add('hidden'); return; }
+
+    const onHtml = info.on && info.on.length
+      ? `<div class="rd-row"><span class="rd-label on">音</span><span class="rd-vals">${info.on.join('・')}</span></div>`
+      : '';
+    const kunHtml = info.kun && info.kun.length
+      ? `<div class="rd-row"><span class="rd-label kun">訓</span><span class="rd-vals">${info.kun.map(fmtKun).join('・')}</span></div>`
+      : '';
+    const wordsHtml = (info.words || [])
+      .map(([w, r]) => `<span class="word-chip"><ruby>${w}<rt>${r}</rt></ruby></span>`)
+      .join('');
+    const exHtml = info.ex && info.ex[0]
+      ? '<div class="info-section-title">れいぶん</div>' +
+        `<div class="info-ex"><div class="ex-ja">${info.ex[0]}</div>` +
+        `<div class="ex-yomi">${info.ex[1] || ''}</div></div>`
+      : '';
+
+    charInfoCard.innerHTML =
+      (onHtml || kunHtml ? `<div class="info-readings">${onHtml}${kunHtml}</div>` : '') +
+      (info.mean ? `<div class="info-mean">${info.mean}</div>` : '') +
+      (wordsHtml ? `<div class="info-section-title">ことば</div><div class="info-words">${wordsHtml}</div>` : '') +
+      exHtml;
+    charInfoCard.classList.remove('hidden');
   }
 
   function prevChar() {
