@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
     <!-- ホーム -->
@@ -127,6 +127,8 @@
             <button id="btn-next-char" class="nav-btn" aria-label="つぎの じ">›</button>
         </header>
 
+        <div class="practice-body">
+        <div class="practice-main">
         <div class="mode-tabs" role="tablist">
             <button id="tab-watch" class="mode-tab active">👀 みる</button>
             <button id="tab-trace" class="mode-tab">✏️ なぞる</button>
@@ -160,9 +162,11 @@
         <div id="trace-controls" class="hidden">
             <button id="btn-trace-restart" class="big-btn ghost-btn">🔄 さいしょから</button>
         </div>
+        </div><!-- /.practice-main -->
 
-        <!-- よみ・いみ・ことば (じょうほうカード) -->
+        <!-- よみ・いみ・ことば (じょうほうカード) — 広い画面では右側に並ぶ -->
         <section id="char-info-card" class="info-card hidden" aria-label="よみかたと いみ"></section>
+        </div><!-- /.practice-body -->
     </div>
 
     <!-- バッジ コレクション -->
@@ -196,16 +200,16 @@
     </div>
 
     <!-- Scripts in order -->
-    <script src="data/hiragana.js?v=4"></script>
-    <script src="data/katakana.js?v=4"></script>
-    <script src="data/kanji1.js?v=4"></script>
-    <script src="data/kanji2.js?v=4"></script>
-    <script src="data/kanainfo.js?v=4"></script>
-    <script src="data/kanjiinfo.js?v=4"></script>
-    <script src="js/sounds.js?v=4"></script>
-    <script src="js/player.js?v=4"></script>
-    <script src="js/tracer.js?v=4"></script>
-    <script src="js/gamify.js?v=4"></script>
-    <script src="js/app.js?v=4"></script>
+    <script src="data/hiragana.js?v=5"></script>
+    <script src="data/katakana.js?v=5"></script>
+    <script src="data/kanji1.js?v=5"></script>
+    <script src="data/kanji2.js?v=5"></script>
+    <script src="data/kanainfo.js?v=5"></script>
+    <script src="data/kanjiinfo.js?v=5"></script>
+    <script src="js/sounds.js?v=5"></script>
+    <script src="js/player.js?v=5"></script>
+    <script src="js/tracer.js?v=5"></script>
+    <script src="js/gamify.js?v=5"></script>
+    <script src="js/app.js?v=5"></script>
 </body>
 </html>

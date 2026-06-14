@@ -695,6 +695,51 @@ header.bar {
 }
 
 /* ============================================================
+   練習画面のレイアウト (狭い=縦, 広い=文字の右に情報カード)
+   ============================================================ */
+.practice-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.practice-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+/* 広い画面: 文字エリアの右に情報カードを並べて スクロール不要に */
+@media (min-width: 760px) {
+    #screen-practice {
+        max-width: 880px;
+    }
+    .practice-body {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 28px;
+    }
+    .practice-main {
+        width: min(48vw, 400px);
+        flex: 0 0 auto;
+    }
+    .practice-main .stage-card {
+        width: 100%;
+    }
+    #char-info-card.info-card {
+        width: 308px;
+        flex: 0 0 308px;
+        margin-top: 0;
+        /* スクロールしても見えるように上部に追従 */
+        position: sticky;
+        top: 14px;
+    }
+}
+
+/* ============================================================
    よみ・いみ・ことば カード (練習画面)
    ============================================================ */
 .info-card {
